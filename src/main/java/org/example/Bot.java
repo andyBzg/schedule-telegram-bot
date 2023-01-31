@@ -13,6 +13,8 @@ import java.util.ArrayList;
 
 public class Bot extends TelegramLongPollingBot {
 
+    private final String BOT_NAME = System.getenv("BOT_NAME");
+    private final String BOT_TOKEN = System.getenv("BOT_TOKEN");
     private Storage storage;
     private ReplyKeyboardMarkup replyKeyboardMarkup;
 
@@ -23,12 +25,12 @@ public class Bot extends TelegramLongPollingBot {
 
     @Override
     public String getBotUsername() {
-        return System.getenv("BOT_NAME");
+        return BOT_NAME;
     }
 
     @Override
     public String getBotToken() {
-        return System.getenv("BOT_TOKEN");
+        return BOT_TOKEN;
     }
 
     @Override
@@ -37,7 +39,7 @@ public class Bot extends TelegramLongPollingBot {
         Message originalMessage = update.getMessage(); //Извлекаем из объекта сообщение пользователя
         System.out.println(originalMessage.getText()); //Вывод сообщения в консоль
 
-        String chatID = originalMessage.getChatId().toString();
+        Long chatID = originalMessage.getChatId(); //получаем id чата из сообщения
         //Получаем текст сообщения пользователя, отправляем обработчик
         String parserResponse = parseMessage(originalMessage.getText());
 
@@ -106,20 +108,20 @@ public class Bot extends TelegramLongPollingBot {
 
         //Создаем список с рядами кнопок
         ArrayList<KeyboardRow> keyboardRows = new ArrayList<>();
-        //Создаем один ряды кнопок и добавляем их в список
+        //Создаем ряды кнопок и добавляем их в список
         KeyboardRow firstKeyboardRow = new KeyboardRow();
         KeyboardRow secondKeyboardRow = new KeyboardRow();
         KeyboardRow thirdKeyboardRow = new KeyboardRow();
         keyboardRows.add(firstKeyboardRow);
         keyboardRows.add(secondKeyboardRow);
         keyboardRows.add(thirdKeyboardRow);
-        //Добавляем одну кнопки с текстом наши ряды
+        //Добавляем кнопки с текстом в наши ряды
         firstKeyboardRow.add(new KeyboardButton("Старт"));
         firstKeyboardRow.add(new KeyboardButton("Info"));
         secondKeyboardRow.add(new KeyboardButton("Обязательные"));
         secondKeyboardRow.add(new KeyboardButton("Дополнительные"));
         thirdKeyboardRow.add(new KeyboardButton("Консультации"));
-        //добавляем лист с одним рядом кнопок в главный объект
+        //добавляем лист с рядами кнопок в главный объект
         replyKeyboardMarkup.setKeyboard(keyboardRows);
     }
 }
