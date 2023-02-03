@@ -1,27 +1,27 @@
 package org.example;
 
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
+import org.telegram.telegrambots.meta.api.objects.commands.BotCommand;
+import org.telegram.telegrambots.meta.api.objects.commands.scope.BotCommandScopeDefault;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Bot extends TelegramLongPollingBot {
 
     private final String BOT_NAME = System.getenv("BOT_NAME");
     private final String BOT_TOKEN = System.getenv("BOT_TOKEN");
     private Storage storage;
-    private ReplyKeyboardMarkup replyKeyboardMarkup;
 
     public Bot() {
         storage = new Storage();
-        initKeyboard();
-    }
+        initCommands();
+        }
 
     @Override
     public String getBotUsername() {
@@ -46,7 +46,6 @@ public class Bot extends TelegramLongPollingBot {
         //Добавляем в сообщение id чата а также ответ
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(chatID);
-        sendMessage.setReplyMarkup(replyKeyboardMarkup);
         sendMessage.setText(parserResponse);
         sendAnswerMessage(sendMessage);
     }
@@ -65,15 +64,15 @@ public class Bot extends TelegramLongPollingBot {
 
         String response;
         //Сравниваем текст пользователя с нашими командами, на основе этого формируем ответ
-        if (ServiceCommand.START.equals(textMsg) || textMsg.equals("Старт"))
+        if (ServiceCommand.START.equals(textMsg))
             response = greetings();
-        else if (ServiceCommand.INFO.equals(textMsg) || textMsg.equals("Info")) {
-            return info();
-        } else if (ServiceCommand.REQUIRED.equals(textMsg) || textMsg.equals("Обязательные"))
+        else if (ServiceCommand.HELP.equals(textMsg)) {
+            response = info();
+        } else if (ServiceCommand.REQUIRED.equals(textMsg))
             response = storage.showAllLectures();
-        else if (ServiceCommand.ELECTIVE.equals(textMsg) || textMsg.equals("Дополнительные"))
+        else if (ServiceCommand.ELECTIVE.equals(textMsg))
             response = storage.showElectiveLectures();
-        else if (ServiceCommand.ADDITIONAL.equals(textMsg) || textMsg.equals("Консультации")) {
+        else if (ServiceCommand.CONSULTATION.equals(textMsg)) {
             response = storage.showAdditional();
         } else
             response = textMsg;
@@ -83,46 +82,34 @@ public class Bot extends TelegramLongPollingBot {
 
     private String greetings() {
         return """
-                Приветствую!\s
-                Бот показывает расписание лекций на текущую неделю\s
-                Введите команду /required, чтобы посмотреть обязательные лекции\s
-                /elective , чтобы посмотреть дополнительные и\s
-                /additional , чтобы увидеть конусльтации""";
+                Привет!\s
+                \nБот умеет показывать расписание лекций и отвечать на сообщение таким же сообщением =)\s
+                \nЧтобы посмотреть список доступных команд воспользуйтесь меню или введите /help""";
     }
 
     private String info() {
         return """
                 Список доступных команд:\s
                 /start\s
-                /info\s
+                /help\s
                 /required\s
                 /elective\s
-                /additional""";
+                /consultation""";
     }
 
-    public void initKeyboard() {
-        //Создаем объект будущей клавиатуры и выставляем нужные настройки
-        replyKeyboardMarkup = new ReplyKeyboardMarkup();
-        replyKeyboardMarkup.setResizeKeyboard(true); //подгоняем размер
-        replyKeyboardMarkup.setOneTimeKeyboard(false); //скрываем после использования
-
-        //Создаем список с рядами кнопок
-        ArrayList<KeyboardRow> keyboardRows = new ArrayList<>();
-        //Создаем ряды кнопок и добавляем их в список
-        KeyboardRow firstKeyboardRow = new KeyboardRow();
-        KeyboardRow secondKeyboardRow = new KeyboardRow();
-        KeyboardRow thirdKeyboardRow = new KeyboardRow();
-        keyboardRows.add(firstKeyboardRow);
-        keyboardRows.add(secondKeyboardRow);
-        keyboardRows.add(thirdKeyboardRow);
-        //Добавляем кнопки с текстом в наши ряды
-        firstKeyboardRow.add(new KeyboardButton("Старт"));
-        firstKeyboardRow.add(new KeyboardButton("Info"));
-        secondKeyboardRow.add(new KeyboardButton("Обязательные"));
-        secondKeyboardRow.add(new KeyboardButton("Дополнительные"));
-        thirdKeyboardRow.add(new KeyboardButton("Консультации"));
-        //добавляем лист с рядами кнопок в главный объект
-        replyKeyboardMarkup.setKeyboard(keyboardRows);
+    private void initCommands() {
+        List<BotCommand> commandList = new ArrayList<>();
+        commandList.add(new BotCommand(ServiceCommand.START.toString(), "get a welcome message"));
+        commandList.add(new BotCommand(ServiceCommand.REQUIRED.toString(), "get required lectures"));
+        commandList.add(new BotCommand(ServiceCommand.ELECTIVE.toString(), "get elective lectures"));
+        commandList.add(new BotCommand(ServiceCommand.CONSULTATION.toString(), "get consultations"));
+        commandList.add(new BotCommand(ServiceCommand.HELP.toString(), "show all commands"));
+        try{
+            this.execute(new SetMyCommands(commandList, new BotCommandScopeDefault(), null));
+        }
+        catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
     }
 }
 

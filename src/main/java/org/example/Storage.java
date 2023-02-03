@@ -1,38 +1,39 @@
 package org.example;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class Storage {
 
     private ArrayList<String> lessonList;
     private ArrayList<String> electiveList;
-    private ArrayList<String> additionalList;
+    private ArrayList<String> consultationsList;
 
     public Storage() {
         lessonList = new ArrayList<>();
-        //TODO изменить спопоб добавления уроков
-        lessonList.add("Java - 30.01 start at 18:30 \nTkachenko Daniil");
-        lessonList.add("Java - 01.02 start at 18:30 \nTkachenko Daniil");
-        lessonList.add("Algorithms - 03.02 start at 19:00 \nBarseghyan Gegham");
+        addLecturesFromFile(lessonList, "Timetable.txt");
 
         electiveList = new ArrayList<>();
-        electiveList.add("Организация тестирования в команде разработчиков, коммуникация и взаимодействие - " +
-                "30.01 start at 15:00 \nSorokin Stepan");
-        electiveList.add("Нейронные сети и их применение - 30.01 start at 19:00 \nGribkov Aleksander");
-        electiveList.add("FTP and HTTP services of the Internet. (in English) - " +
-                "31.01 start at  19:00 \nZakoyan Tigran");
-        electiveList.add("Нейронные сети и их применение. - 01.02 start at 15:00 \nMoiseev Ilya");
-        electiveList.add("Организация тестирования в команде разработчиков, коммуникация и взаимодействие - " +
-                "01.02 start at 19:00 \nMiadzvedzeva Tatsiana");
-        electiveList.add("Информационные технологии в различных сферах деятельности - " +
-                "02.02 start at 15:00 \nAkerov Kunerkhan");
-        electiveList.add("QR-коды. Их создание и применение. - 02.02 start at 19:00 \nDomasevich Andrey");
+        addLecturesFromFile(electiveList, "Elective.txt");
 
+        consultationsList = new ArrayList<>();
+        addLecturesFromFile(consultationsList, "Consultations.txt");
+    }
 
-        additionalList = new ArrayList<>();
-        additionalList.add("Java consultation - 04.02 start at 13:00 \nEgorov Mikhail");
-        additionalList.add("FE consultation - 04.02 start at 13:00 \nMovsisyan Tigran");
-        additionalList.add("Linux consultation - 04.02 start at 15:00 \nBakhtinov Andrei");
+    private void addLecturesFromFile(ArrayList<String> list, String fileName) {
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(fileName));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                list.add(line);
+            }
+            reader.close();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public String showAllLectures() {
@@ -53,15 +54,10 @@ public class Storage {
 
     public String showAdditional() {
         String additional = "Консультации: \n\n";
-        for (String s : additionalList) {
+        for (String s : consultationsList) {
             additional += s + " \n\n";
         }
         return additional;
-    }
-
-    //TODO реализовать добавление лекций в листы
-    public void setNextLesson(String incomingMsg) {
-        lessonList.add(incomingMsg);
     }
 
 }

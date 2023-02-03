@@ -3,10 +3,10 @@ package org.example;
 public enum ServiceCommand {
 
     START("/start"),
-    INFO("/info"),
+    HELP("/help"),
     REQUIRED("/required"),
     ELECTIVE("/elective"),
-    ADDITIONAL("/additional");
+    CONSULTATION("/consultation");
 
     private String cmd;
 
