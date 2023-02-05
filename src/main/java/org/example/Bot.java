@@ -18,10 +18,12 @@ public class Bot extends TelegramLongPollingBot {
     private final String BOT_TOKEN = System.getenv("BOT_TOKEN");
     private Storage storage;
 
+
     public Bot() {
         storage = new Storage();
         initCommands();
         }
+
 
     @Override
     public String getBotUsername() {
@@ -69,11 +71,11 @@ public class Bot extends TelegramLongPollingBot {
         else if (ServiceCommand.HELP.equals(textMsg)) {
             response = info();
         } else if (ServiceCommand.REQUIRED.equals(textMsg))
-            response = storage.showAllLectures();
+            response = storage.showRequiredLectures();
         else if (ServiceCommand.ELECTIVE.equals(textMsg))
             response = storage.showElectiveLectures();
         else if (ServiceCommand.CONSULTATION.equals(textMsg)) {
-            response = storage.showAdditional();
+            response = storage.showConsultations();
         } else
             response = textMsg;
 
