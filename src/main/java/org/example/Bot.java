@@ -43,7 +43,7 @@ public class Bot extends TelegramLongPollingBot {
         Message originalMessage = update.getMessage(); //Извлекаем из объекта сообщение пользователя
         System.out.println(originalMessage.getText()); //Вывод сообщения в консоль
 
-        Long chatID = originalMessage.getChatId(); //получаем id чата из сообщения
+        String chatID = originalMessage.getChatId().toString(); //получаем id чата из сообщения
         //Получаем текст сообщения пользователя, отправляем обработчик
         String parserResponse = parseMessage(originalMessage.getText());
 
@@ -69,19 +69,19 @@ public class Bot extends TelegramLongPollingBot {
 
         String response;
         //Сравниваем текст пользователя с нашими командами, на основе этого формируем ответ
-        if (START.equals(textMsg)) {
+        if (START.equals(textMsg) || textMsg.equals(START + "@" + getBotUsername())) {
             response = greetings();
         }
-        else if (HELP.equals(textMsg)) {
+        else if (HELP.equals(textMsg) || textMsg.equals(HELP + "@" + getBotUsername())) {
             response = info();
         }
-        else if (REQUIRED.equals(textMsg)) {
+        else if (REQUIRED.equals(textMsg) || textMsg.equals(REQUIRED + "@" + getBotUsername())) {
             response = storage.showRequiredLectures();
         }
-        else if (ELECTIVE.equals(textMsg)) {
+        else if (ELECTIVE.equals(textMsg) || textMsg.equals(ELECTIVE + "@" + getBotUsername())) {
             response = storage.showElectiveLectures();
         }
-        else if (CONSULTATION.equals(textMsg)) {
+        else if (CONSULTATION.equals(textMsg) || textMsg.equals(CONSULTATION + "@" + getBotUsername())) {
             response = storage.showConsultations();
         }
         else
