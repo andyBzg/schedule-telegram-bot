@@ -8,7 +8,9 @@ public enum ServiceCommand {
     ELECTIVE("/elective"),
     CONSULTATION("/consultation");
 
+
     private String cmd;
+
 
     ServiceCommand(String cmd) {
         this.cmd = cmd;
