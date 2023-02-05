@@ -4,25 +4,20 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Storage {
 
-    private ArrayList<String> lessonList;
-    private ArrayList<String> electiveList;
-    private ArrayList<String> consultationsList;
+    private List<String> lessonList;
+    private List<String> electiveList;
+    private List<String> consultationsList;
+
 
     public Storage() {
-        lessonList = new ArrayList<>();
-        addLecturesFromFile(lessonList, "Timetable.txt");
 
-        electiveList = new ArrayList<>();
-        addLecturesFromFile(electiveList, "Elective.txt");
-
-        consultationsList = new ArrayList<>();
-        addLecturesFromFile(consultationsList, "Consultations.txt");
     }
 
-    private void addLecturesFromFile(ArrayList<String> list, String fileName) {
+    private void addLecturesFromFile(List<String> list, String fileName) {
         try {
             BufferedReader reader = new BufferedReader(new FileReader(fileName));
             String line;
@@ -36,7 +31,10 @@ public class Storage {
         }
     }
 
-    public String showAllLectures() {
+    public String showRequiredLectures() {
+        lessonList = new ArrayList<>();
+        addLecturesFromFile(lessonList, "Timetable.txt");
+
         String allLectures = "Все лекции: \n\n";
         for (String s : lessonList) {
             allLectures += s + " \n\n";
@@ -45,6 +43,9 @@ public class Storage {
     }
 
     public String showElectiveLectures() {
+        electiveList = new ArrayList<>();
+        addLecturesFromFile(electiveList, "Elective.txt");
+
         String elective = "Выборочные: \n\n";
         for (String s : electiveList) {
             elective += s + " \n\n";
@@ -52,7 +53,10 @@ public class Storage {
         return elective;
     }
 
-    public String showAdditional() {
+    public String showConsultations() {
+        consultationsList = new ArrayList<>();
+        addLecturesFromFile(consultationsList, "Consultations.txt");
+
         String additional = "Консультации: \n\n";
         for (String s : consultationsList) {
             additional += s + " \n\n";
