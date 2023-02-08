@@ -1,10 +1,12 @@
-package org.example;
+package org.example.classes;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.example.classes.Bot.START_COMMAND;
 
 public class Storage {
 
@@ -35,33 +37,33 @@ public class Storage {
         lessonList = new ArrayList<>();
         addLecturesFromFile(lessonList, "Timetable.txt");
 
-        String allLectures = "Все лекции: \n\n";
+        StringBuilder allLectures = new StringBuilder("Необходимые: \n\n");
         for (String s : lessonList) {
-            allLectures += s + " \n\n";
+            allLectures.append(s).append(" \n\n");
         }
-        return allLectures;
+        return allLectures + START_COMMAND;
     }
 
     public String showElectiveLectures() {
         electiveList = new ArrayList<>();
         addLecturesFromFile(electiveList, "Elective.txt");
 
-        String elective = "Выборочные: \n\n";
+        StringBuilder elective = new StringBuilder("Выборочные: \n\n");
         for (String s : electiveList) {
-            elective += s + " \n\n";
+            elective.append(s).append(" \n\n");
         }
-        return elective;
+        return elective + START_COMMAND;
     }
 
     public String showConsultations() {
         consultationsList = new ArrayList<>();
         addLecturesFromFile(consultationsList, "Consultations.txt");
 
-        String additional = "Консультации: \n\n";
+        StringBuilder additional = new StringBuilder("Консультации: \n\n");
         for (String s : consultationsList) {
-            additional += s + " \n\n";
+            additional.append(s).append(" \n\n");
         }
-        return additional;
+        return additional + START_COMMAND;
     }
 
 }
