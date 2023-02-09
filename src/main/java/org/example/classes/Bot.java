@@ -20,7 +20,7 @@ public class Bot extends TelegramLongPollingBot {
 
     private final String BOT_NAME = System.getenv("BOT_NAME");
     private final String BOT_TOKEN = System.getenv("BOT_TOKEN");
-    static final String START_COMMAND = "/start";
+    private static final String START_COMMAND = "/start";
     private Storage storage;
 
 
@@ -29,6 +29,10 @@ public class Bot extends TelegramLongPollingBot {
         initCommands();
     }
 
+
+    public static String getStartCommand() {
+        return START_COMMAND;
+    }
 
     @Override
     public String getBotUsername() {
