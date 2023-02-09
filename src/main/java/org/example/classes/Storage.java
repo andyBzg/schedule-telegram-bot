@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.example.classes.Bot.START_COMMAND;
 
 public class Storage {
 
@@ -41,7 +40,7 @@ public class Storage {
         for (String s : lessonList) {
             allLectures.append(s).append(" \n\n");
         }
-        return allLectures + START_COMMAND;
+        return allLectures + "" + Bot.START_COMMAND;
     }
 
     public String showElectiveLectures() {
@@ -52,7 +51,7 @@ public class Storage {
         for (String s : electiveList) {
             elective.append(s).append(" \n\n");
         }
-        return elective + START_COMMAND;
+        return elective + "" + Bot.START_COMMAND;
     }
 
     public String showConsultations() {
@@ -63,7 +62,7 @@ public class Storage {
         for (String s : consultationsList) {
             additional.append(s).append(" \n\n");
         }
-        return additional + START_COMMAND;
+        return additional + "" + Bot.START_COMMAND;
     }
 
 }
