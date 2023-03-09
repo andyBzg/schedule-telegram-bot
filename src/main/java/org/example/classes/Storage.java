@@ -9,16 +9,21 @@ import java.util.List;
 
 public class Storage {
 
-    private List<String> lessonList;
-    private List<String> electiveList;
-    private List<String> consultationsList;
+    private List<Lesson> requiredList;
+    private List<Lesson> electiveList;
+    private List<Lesson> consultationsList;
+    private List<String> linesFromFile;
 
 
     public Storage() {
-
+        requiredList = new ArrayList<>();
+        electiveList = new ArrayList<>();
+        consultationsList = new ArrayList<>();
+        linesFromFile = new ArrayList<>();
+        addStringsFromFile(linesFromFile, "Timetable.txt");
     }
 
-    private void addLecturesFromFile(List<String> list, String fileName) {
+    private void addStringsFromFile(List<String> list, String fileName) {
         try {
             BufferedReader reader = new BufferedReader(new FileReader(fileName));
             String line;
@@ -33,36 +38,43 @@ public class Storage {
     }
 
     public String showRequiredLectures() {
-        lessonList = new ArrayList<>();
-        addLecturesFromFile(lessonList, "Timetable.txt");
+        requiredList = linesFromFile.stream()
+                .filter(e -> e.matches(".*\\bRequired\\b.*"))
+                .limit(5)
+                .map(Lesson::mapToEntity)
+                .toList();
 
-        StringBuilder allLectures = new StringBuilder("Необходимые: \n\n");
-        for (String s : lessonList) {
-            allLectures.append(s).append(" \n\n");
-        }
-        return allLectures + "" + Bot.getStartCommand();
+        return getString("Необходимые: \n\n", requiredList);
     }
 
     public String showElectiveLectures() {
-        electiveList = new ArrayList<>();
-        addLecturesFromFile(electiveList, "Elective.txt");
+        electiveList = linesFromFile.stream()
+                .filter(e -> !e.matches(".*\\bRequired\\b.*"))
+                .filter(e -> !e.matches(".*\\bConsultation\\b.*"))
+                .limit(5)
+                .map(Lesson::mapToEntity)
+                .toList();
 
-        StringBuilder elective = new StringBuilder("Выборочные: \n\n");
-        for (String s : electiveList) {
-            elective.append(s).append(" \n\n");
-        }
-        return elective + "" + Bot.getStartCommand();
+        return getString("Выборочные: \n\n", electiveList);
     }
 
     public String showConsultations() {
-        consultationsList = new ArrayList<>();
-        addLecturesFromFile(consultationsList, "Consultations.txt");
+        consultationsList = linesFromFile.stream()
+                .filter(e -> e.matches(".*\\bConsultation\\b.*"))
+                .limit(3)
+                .map(Lesson::mapToEntity)
+                .toList();
 
-        StringBuilder additional = new StringBuilder("Консультации: \n\n");
-        for (String s : consultationsList) {
-            additional.append(s).append(" \n\n");
+        return getString("Консультации: \n\n", consultationsList);
+    }
+
+    private String getString(String str, List<Lesson> lessonsList) {
+        StringBuilder lessonsString = new StringBuilder(str);
+        for (Lesson s : lessonsList) {
+            lessonsString.append(s).append(" \n\n");
         }
-        return additional + "" + Bot.getStartCommand();
+
+        return lessonsString + "" + Bot.getStartCommand();
     }
 
 }
