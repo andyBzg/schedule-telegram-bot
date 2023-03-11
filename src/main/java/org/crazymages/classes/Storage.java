@@ -1,4 +1,6 @@
-package org.example.classes;
+package org.crazymages.classes;
+
+import lombok.extern.log4j.Log4j2;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -7,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+@Log4j2
 public class Storage {
 
     private List<Lesson> requiredList;
@@ -33,7 +36,7 @@ public class Storage {
             reader.close();
         }
         catch (IOException e) {
-            e.printStackTrace();
+            log.error("Error occurred " + e.getMessage());
         }
     }
 
@@ -74,7 +77,7 @@ public class Storage {
             lessonsString.append(s).append(" \n\n");
         }
 
-        return lessonsString + "" + Bot.getStartCommand();
+        return lessonsString + Bot.getStartCommand();
     }
 
 }

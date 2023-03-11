@@ -1,4 +1,4 @@
-package org.example.classes;
+package org.crazymages.classes;
 
 public class Lesson {
 

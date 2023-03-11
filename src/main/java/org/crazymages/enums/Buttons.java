@@ -1,4 +1,4 @@
-package org.example.enums;
+package org.crazymages.enums;
 
 public enum Buttons {
 

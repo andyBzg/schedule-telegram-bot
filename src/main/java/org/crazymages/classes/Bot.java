@@ -1,6 +1,7 @@
-package org.example.classes;
+package org.crazymages.classes;
 
-import org.example.enums.Buttons;
+import lombok.extern.log4j.Log4j2;
+import org.crazymages.enums.Buttons;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+@Log4j2
 public class Bot extends TelegramLongPollingBot {
 
     private final String BOT_NAME = System.getenv("BOT_NAME");
@@ -48,7 +50,7 @@ public class Bot extends TelegramLongPollingBot {
     public void onUpdateReceived(Update update) {
 
         if (update.hasMessage()) {
-            System.out.println(update.getMessage().getText());
+            log.info("Incoming message: " + update.getMessage().getText());
         } //Вывод сообщения в консоль
 
         if (update.hasMessage() && update.getMessage().hasText()) {
@@ -96,7 +98,7 @@ public class Bot extends TelegramLongPollingBot {
                 execute(message);
             }
             catch (TelegramApiException e) {
-                e.printStackTrace();
+                log.error("Error occurred " + e.getMessage());
             }
         }
     }
@@ -107,7 +109,7 @@ public class Bot extends TelegramLongPollingBot {
                 execute(message);
             }
             catch (TelegramApiException e) {
-                e.printStackTrace();
+                log.error("Error occurred " + e.getMessage());
             }
         }
     }
@@ -164,7 +166,7 @@ public class Bot extends TelegramLongPollingBot {
             this.execute(new SetMyCommands(commandList, new BotCommandScopeDefault(), null));
         }
         catch (TelegramApiException e) {
-            e.printStackTrace();
+            log.error("Error occurred " + e.getMessage());
         }
     }
 }
