@@ -1,5 +1,8 @@
 package org.crazymages.classes;
 
+import lombok.Getter;
+
+@Getter
 public class Lesson {
 
     private String subject;
