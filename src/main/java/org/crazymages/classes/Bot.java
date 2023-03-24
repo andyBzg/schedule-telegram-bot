@@ -137,9 +137,14 @@ public class Bot extends TelegramLongPollingBot {
         consultationsButton.setText(Buttons.CONSULT_BUTTON_TEXT.toString());
         consultationsButton.setCallbackData(Buttons.CONSULT_BUTTON.toString());
 
+        InlineKeyboardButton holidaysButton = new InlineKeyboardButton();
+        holidaysButton.setText(Buttons.HOLIDAYS_BUTTON_TEXT.toString());
+        holidaysButton.setCallbackData(Buttons.HOLIDAYS_BUTTON.toString());
+
         firstRowInLine.add(requiredButton);
         firstRowInLine.add(electiveButton);
         secondRowInLine.add(consultationsButton);
+        secondRowInLine.add(holidaysButton);
 
         rowsInLine.add(firstRowInLine);
         rowsInLine.add(secondRowInLine);

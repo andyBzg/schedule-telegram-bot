@@ -7,7 +7,9 @@ public enum Buttons {
     ELECTIVE_BUTTON_TEXT("Выборочные"),
     ELECTIVE_BUTTON("ELECTIVE_BUTTON_TOKEN"),
     CONSULT_BUTTON_TEXT("Консультации"),
-    CONSULT_BUTTON("CONSULT_BUTTON_TOKEN");
+    CONSULT_BUTTON("CONSULT_BUTTON_TOKEN"),
+    HOLIDAYS_BUTTON_TEXT("Каникулы"),
+    HOLIDAYS_BUTTON("HOLIDAYS_BUTTON_TOKEN");
 
 
     private String button;

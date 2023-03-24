@@ -20,15 +20,21 @@ public class Storage {
     private List<Lesson> requiredList;
     private List<Lesson> electiveList;
     private List<Lesson> consultationsList;
-    private List<String> linesFromFile;
+    private List<Lesson> holidaysList;
+    private List<String> lessonsLinesFromFile;
+    private List<String> holidaysLinesFromFile;
+    private final String timetablePath = "src/main/resources/Timetable.txt";
+    private final String holidaysPath = "src/main/resources/Holidays.txt";
 
 
     public Storage() {
         requiredList = new ArrayList<>();
         electiveList = new ArrayList<>();
         consultationsList = new ArrayList<>();
-        linesFromFile = new ArrayList<>();
-        addStringsFromFile(linesFromFile, "Timetable.txt");
+        holidaysList = new ArrayList<>();
+        lessonsLinesFromFile = new ArrayList<>();
+        addStringsFromFile(lessonsLinesFromFile, timetablePath);
+//        addStringsFromFile(holidaysLinesFromFile, holidaysPath);
     }
 
     private void addStringsFromFile(List<String> list, String fileName) {
@@ -46,7 +52,7 @@ public class Storage {
     }
 
     public String showRequiredLectures() {
-        requiredList = linesFromFile.stream()
+        requiredList = lessonsLinesFromFile.stream()
                 .filter(e -> e.matches(".*\\bRequired\\b.*"))
                 .map(Lesson::mapToEntity)
                 .filter(e -> !getLocalDateFromSource(e.getDate()).isBefore(LocalDate.now()))
@@ -57,7 +63,7 @@ public class Storage {
     }
 
     public String showElectiveLectures() {
-        electiveList = linesFromFile.stream()
+        electiveList = lessonsLinesFromFile.stream()
                 .filter(e -> !e.matches(".*\\bRequired\\b.*"))
                 .filter(e -> !e.matches(".*\\bConsultation\\b.*"))
                 .map(Lesson::mapToEntity)
@@ -69,7 +75,7 @@ public class Storage {
     }
 
     public String showConsultations() {
-        consultationsList = linesFromFile.stream()
+        consultationsList = lessonsLinesFromFile.stream()
                 .filter(e -> e.matches(".*\\bConsultation\\b.*"))
                 .map(Lesson::mapToEntity)
                 .filter(e -> !getLocalDateFromSource(e.getDate()).isBefore(LocalDate.now()))
@@ -77,6 +83,13 @@ public class Storage {
                 .toList();
 
         return getString("Консультации: \n\n", consultationsList);
+    }
+
+    public String showHolidays() {
+
+//        work in progress...
+
+        return getString("Каникулы: \n\n", holidaysList);
     }
 
     private String getString(String str, List<Lesson> lessonsList) {
