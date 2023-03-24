@@ -13,14 +13,13 @@ import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.ChronoField;
 import java.util.*;
 
-
 @Log4j2
 public class Storage {
 
     private List<Lesson> requiredList;
     private List<Lesson> electiveList;
     private List<Lesson> consultationsList;
-    private List<Lesson> holidaysList;
+    private List<Holiday> holidaysList;
     private List<String> lessonsLinesFromFile;
     private List<String> holidaysLinesFromFile;
     private final String timetablePath = "src/main/resources/Timetable.txt";
@@ -33,8 +32,9 @@ public class Storage {
         consultationsList = new ArrayList<>();
         holidaysList = new ArrayList<>();
         lessonsLinesFromFile = new ArrayList<>();
+        holidaysLinesFromFile = new ArrayList<>();
         addStringsFromFile(lessonsLinesFromFile, timetablePath);
-//        addStringsFromFile(holidaysLinesFromFile, holidaysPath);
+        addStringsFromFile(holidaysLinesFromFile, holidaysPath);
     }
 
     private void addStringsFromFile(List<String> list, String fileName) {
@@ -52,8 +52,9 @@ public class Storage {
     }
 
     public String showRequiredLectures() {
+        String regex = ".*\\bRequired\\b.*";
         requiredList = lessonsLinesFromFile.stream()
-                .filter(e -> e.matches(".*\\bRequired\\b.*"))
+                .filter(e -> e.matches(regex))
                 .map(Lesson::mapToEntity)
                 .filter(e -> !getLocalDateFromSource(e.getDate()).isBefore(LocalDate.now()))
                 .limit(5)
@@ -63,9 +64,11 @@ public class Storage {
     }
 
     public String showElectiveLectures() {
+        String regexRequired = ".*\\bRequired\\b.*";
+        String regexConsult = ".*\\bConsultation\\b.*";
         electiveList = lessonsLinesFromFile.stream()
-                .filter(e -> !e.matches(".*\\bRequired\\b.*"))
-                .filter(e -> !e.matches(".*\\bConsultation\\b.*"))
+                .filter(e -> !e.matches(regexRequired))
+                .filter(e -> !e.matches(regexConsult))
                 .map(Lesson::mapToEntity)
                 .filter(e -> !getLocalDateFromSource(e.getDate()).isBefore(LocalDate.now()))
                 .limit(5)
@@ -75,8 +78,9 @@ public class Storage {
     }
 
     public String showConsultations() {
+        String regex = ".*\\bConsultation\\b.*";
         consultationsList = lessonsLinesFromFile.stream()
-                .filter(e -> e.matches(".*\\bConsultation\\b.*"))
+                .filter(e -> e.matches(regex))
                 .map(Lesson::mapToEntity)
                 .filter(e -> !getLocalDateFromSource(e.getDate()).isBefore(LocalDate.now()))
                 .limit(3)
@@ -86,10 +90,22 @@ public class Storage {
     }
 
     public String showHolidays() {
+        holidaysList = holidaysLinesFromFile.stream()
+                .map(Holiday::mapToEntity)
+                .filter(e -> !getLocalDateFromSource(e.getEndDate()).isBefore(LocalDate.now()) ||
+                        getLocalDateFromSource(e.getStartDate()).isAfter(LocalDate.now()))
+                .toList();
 
-//        work in progress...
+        return getHolidayString("Каникулы: \n\n", holidaysList);
+    }
 
-        return getString("Каникулы: \n\n", holidaysList);
+    private String getHolidayString(String str, List<Holiday> holidaysList) {
+        StringBuilder holidayString = new StringBuilder(str);
+        for (Holiday h : holidaysList) {
+            holidayString.append(h).append(" \n\n");
+        }
+
+        return holidayString + Bot.getStartCommand();
     }
 
     private String getString(String str, List<Lesson> lessonsList) {

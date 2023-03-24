@@ -49,10 +49,6 @@ public class Bot extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
 
-        if (update.hasMessage()) {
-            log.info("Incoming message: " + update.getMessage().getText());
-        } //Вывод сообщения в консоль
-
         if (update.hasMessage() && update.getMessage().hasText()) {
             String messageText = update.getMessage().getText();
             long chatID = update.getMessage().getChatId();
@@ -78,6 +74,9 @@ public class Bot extends TelegramLongPollingBot {
             }
             else if (callbackData.equals(Buttons.CONSULT_BUTTON.toString())) {
                 editedText = storage.showConsultations();
+            }
+            else if (callbackData.equals(Buttons.HOLIDAYS_BUTTON.toString())) {
+                editedText = storage.showHolidays();
             }
             else {
                 editedText = greetings();

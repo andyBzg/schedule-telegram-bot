@@ -14,7 +14,7 @@ public class Main {
         try {
             TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
             telegramBotsApi.registerBot(new Bot());
-            log.info("App started");
+//            log.info("App started");
         } catch (TelegramApiException e) {
             log.error("Error occurred " + e.getMessage());
         }
